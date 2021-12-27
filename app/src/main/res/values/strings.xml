@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Timer</string>
     <string name="alarm_add">Add alarm</string>
+    <string name="hours">Hours</string>
+    <string name="minutes">Minutes</string>
+    <string name="seconds">Seconds</string>
+    <string name="separation">:</string>
 </resources>
