@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                         Log.i("finish", "timer finished")
                         val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
                         toast.show()
+                        configureFinishedState()
                         //TODO
                     }
                 }.start()
@@ -150,5 +151,12 @@ class MainActivity : AppCompatActivity() {
         resumeButton.visibility = View.VISIBLE
         resetButton.visibility = View.VISIBLE
         timerState = pause
+    }
+    private fun configureFinishedState() {
+        startButton.visibility = View.VISIBLE
+        pauseButton.visibility = View.GONE
+        resumeButton.visibility = View.GONE
+        resetButton.visibility = View.GONE
+        timerState = finished
     }
 }
