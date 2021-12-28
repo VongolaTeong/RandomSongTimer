@@ -79,6 +79,7 @@ class MainActivity : AppCompatActivity() {
         pauseButton.setOnClickListener{
             val toast = Toast.makeText(this, "Timer Paused", Toast.LENGTH_SHORT)
             toast.show()
+            configPauseState()
             //TODO
         }
         resetButton.setOnClickListener{
@@ -139,5 +140,13 @@ class MainActivity : AppCompatActivity() {
         resumeButton.visibility = View.GONE
         resetButton.visibility = View.VISIBLE
         timerState = start
+    }
+
+    private fun configPauseState() {
+        startButton.visibility = View.GONE
+        pauseButton.visibility = View.GONE
+        resumeButton.visibility = View.VISIBLE
+        resetButton.visibility = View.VISIBLE
+        timerState = pause
     }
 }
