@@ -45,8 +45,9 @@ class MainActivity : AppCompatActivity() {
 
         //button listener
         resumeButton.setOnClickListener{
-            val toast = Toast.makeText(this, "Resume timer", Toast.LENGTH_SHORT)
+            val toast = Toast.makeText(this, "Timer resumed", Toast.LENGTH_SHORT)
             toast.show()
+            configStartState()
             //TODO
         }
         startButton.setOnClickListener{
