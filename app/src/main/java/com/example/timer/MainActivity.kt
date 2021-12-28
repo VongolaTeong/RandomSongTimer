@@ -1,6 +1,8 @@
 package com.example.timer
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
@@ -8,5 +10,30 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val resumeButton: Button = findViewById(R.id.button_resume_timer)
+        val startButton: Button = findViewById(R.id.button_start_timer)
+        val stopButton: Button = findViewById(R.id.button_stop_timer)
+        val resetButton: Button = findViewById(R.id.button_reset_timer)
+
+        resumeButton.setOnClickListener{
+            val toast = Toast.makeText(this, "Resume timer", Toast.LENGTH_SHORT)
+            toast.show()
+            //TODO
+        }
+        startButton.setOnClickListener{
+            val toast = Toast.makeText(this, "Start timer", Toast.LENGTH_SHORT)
+            toast.show()
+            //TODO
+        }
+        stopButton.setOnClickListener{
+            val toast = Toast.makeText(this, "Stop timer", Toast.LENGTH_SHORT)
+            toast.show()
+            //TODO
+        }
+        resetButton.setOnClickListener{
+            val toast = Toast.makeText(this, "Reset timer", Toast.LENGTH_SHORT)
+            toast.show()
+            //TODO
+        }
     }
 }
