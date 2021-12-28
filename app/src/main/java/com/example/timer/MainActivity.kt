@@ -2,6 +2,7 @@ package com.example.timer
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         val startButton: Button = findViewById(R.id.button_start_timer)
         val stopButton: Button = findViewById(R.id.button_stop_timer)
         val resetButton: Button = findViewById(R.id.button_reset_timer)
+        val settingButton: ImageButton = findViewById(R.id.button_setting)
 
         resumeButton.setOnClickListener{
             val toast = Toast.makeText(this, "Resume timer", Toast.LENGTH_SHORT)
@@ -33,6 +35,9 @@ class MainActivity : AppCompatActivity() {
         resetButton.setOnClickListener{
             val toast = Toast.makeText(this, "Reset timer", Toast.LENGTH_SHORT)
             toast.show()
+            //TODO
+        }
+        settingButton.setOnClickListener{
             //TODO
         }
     }
