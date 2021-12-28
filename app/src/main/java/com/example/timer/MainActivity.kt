@@ -1,6 +1,8 @@
 package com.example.timer
 
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.NumberPicker
@@ -8,9 +10,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
-    lateinit var numberPickerSeconds: NumberPicker
-    lateinit var numberPickerMinutes: NumberPicker
-    lateinit var numberPickerHours: NumberPicker
+    private lateinit var numberPickerSeconds: NumberPicker
+    private lateinit var numberPickerMinutes: NumberPicker
+    private lateinit var numberPickerHours: NumberPicker
+    private lateinit var myTimer: CountDownTimer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +36,29 @@ class MainActivity : AppCompatActivity() {
             //TODO
         }
         startButton.setOnClickListener{
-            val toast = Toast.makeText(this, "Start timer", Toast.LENGTH_SHORT)
-            toast.show()
+            //no input
+            if (numberPickerSeconds.value==0 && numberPickerMinutes.value==0 && numberPickerHours.value==0) {
+                val toast = Toast.makeText(this, "No input detected!", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+            else {
+                val interval = getInterval()
+                myTimer = object: CountDownTimer(interval, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+                        //TODO
+                    }
+
+                    override fun onFinish() {
+                        Log.i("finish", "timer finished")
+                        val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
+                        toast.show()
+                        //TODO
+                    }
+                }.start()
+                val toast = Toast.makeText(this, "Start timer", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+
             //TODO
         }
         stopButton.setOnClickListener{
@@ -73,5 +97,12 @@ class MainActivity : AppCompatActivity() {
         numberPickerHours.maxValue = 99
         numberPickerHours.minValue = 0
         numberPickerHours.displayedValues = hoursNumbers
+    }
+
+    //function to calculate timer interval
+    private fun getInterval(): Long {
+        val interval = ((numberPickerSeconds.value + numberPickerMinutes.value*60 + numberPickerHours.value*3600)*1000).toLong()
+        Log.i("interval", interval.toString())
+        return interval
     }
 }
