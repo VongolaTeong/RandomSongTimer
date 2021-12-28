@@ -3,6 +3,7 @@ package com.example.timer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.NumberPicker
@@ -10,21 +11,34 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+    private val initial: Byte = 0
+    private val start: Byte = 1
+    private val stop: Byte = 2
+    private val finished: Byte = 3
+
+    private var timerState: Byte = initial
+
     private lateinit var numberPickerSeconds: NumberPicker
     private lateinit var numberPickerMinutes: NumberPicker
     private lateinit var numberPickerHours: NumberPicker
     private lateinit var myTimer: CountDownTimer
+
+    private lateinit var resumeButton: Button
+    private lateinit var startButton: Button
+    private lateinit var stopButton: Button
+    private lateinit var resetButton: Button
+    private lateinit var settingButton: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //find view by ID
-        val resumeButton: Button = findViewById(R.id.button_resume_timer)
-        val startButton: Button = findViewById(R.id.button_start_timer)
-        val stopButton: Button = findViewById(R.id.button_stop_timer)
-        val resetButton: Button = findViewById(R.id.button_reset_timer)
-        val settingButton: ImageButton = findViewById(R.id.button_setting)
+        resumeButton = findViewById(R.id.button_resume_timer)
+        startButton = findViewById(R.id.button_start_timer)
+        stopButton = findViewById(R.id.button_stop_timer)
+        resetButton = findViewById(R.id.button_reset_timer)
+        settingButton = findViewById(R.id.button_setting)
         numberPickerSeconds = findViewById(R.id.number_picker_seconds)
         numberPickerMinutes = findViewById(R.id.number_picker_minutes)
         numberPickerHours = findViewById(R.id.number_picker_hours)
@@ -76,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setInputNumbersValues()
-
+        configInitialState()
     }
     //function to get input on time
     private fun setInputNumbersValues() {
@@ -104,5 +118,17 @@ class MainActivity : AppCompatActivity() {
         val interval = ((numberPickerSeconds.value + numberPickerMinutes.value*60 + numberPickerHours.value*3600)*1000).toLong()
         Log.i("interval", interval.toString())
         return interval
+    }
+
+    //functions to show different UI in different states
+    private fun configInitialState() {
+        startButton.visibility = View.VISIBLE
+        stopButton.visibility = View.GONE
+        resumeButton.visibility = View.GONE
+        resetButton.visibility = View.GONE
+        timerState = initial
+        numberPickerSeconds.value = 0
+        numberPickerMinutes.value = 0
+        numberPickerHours.value = 0
     }
 }
