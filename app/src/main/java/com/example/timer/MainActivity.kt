@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private val initial: Byte = 0
     private val start: Byte = 1
-    private val stop: Byte = 2
+    private val pause: Byte = 2
     private val finished: Byte = 3
 
     private var timerState: Byte = initial
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var resumeButton: Button
     private lateinit var startButton: Button
-    private lateinit var stopButton: Button
+    private lateinit var pauseButton: Button
     private lateinit var resetButton: Button
     private lateinit var settingButton: ImageButton
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         //find view by ID
         resumeButton = findViewById(R.id.button_resume_timer)
         startButton = findViewById(R.id.button_start_timer)
-        stopButton = findViewById(R.id.button_stop_timer)
+        pauseButton = findViewById(R.id.button_pause_timer)
         resetButton = findViewById(R.id.button_reset_timer)
         settingButton = findViewById(R.id.button_setting)
         numberPickerSeconds = findViewById(R.id.number_picker_seconds)
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             //TODO
         }
         startButton.setOnClickListener{
-            //no input
+            //catch the case of no input
             if (numberPickerSeconds.value==0 && numberPickerMinutes.value==0 && numberPickerHours.value==0) {
                 val toast = Toast.makeText(this, "No input detected!", Toast.LENGTH_SHORT)
                 toast.show()
@@ -69,19 +69,20 @@ class MainActivity : AppCompatActivity() {
                         //TODO
                     }
                 }.start()
-                val toast = Toast.makeText(this, "Start timer", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(this, "Timer started", Toast.LENGTH_SHORT)
                 toast.show()
+                configStartState()
             }
 
             //TODO
         }
-        stopButton.setOnClickListener{
-            val toast = Toast.makeText(this, "Stop timer", Toast.LENGTH_SHORT)
+        pauseButton.setOnClickListener{
+            val toast = Toast.makeText(this, "Timer Paused", Toast.LENGTH_SHORT)
             toast.show()
             //TODO
         }
         resetButton.setOnClickListener{
-            val toast = Toast.makeText(this, "Reset timer", Toast.LENGTH_SHORT)
+            val toast = Toast.makeText(this, "Timer Reset", Toast.LENGTH_SHORT)
             toast.show()
             //TODO
         }
@@ -123,12 +124,20 @@ class MainActivity : AppCompatActivity() {
     //functions to show different UI in different states
     private fun configInitialState() {
         startButton.visibility = View.VISIBLE
-        stopButton.visibility = View.GONE
+        pauseButton.visibility = View.GONE
         resumeButton.visibility = View.GONE
         resetButton.visibility = View.GONE
         timerState = initial
         numberPickerSeconds.value = 0
         numberPickerMinutes.value = 0
         numberPickerHours.value = 0
+    }
+
+    private fun configStartState() {
+        startButton.visibility = View.GONE
+        pauseButton.visibility = View.VISIBLE
+        resumeButton.visibility = View.GONE
+        resetButton.visibility = View.VISIBLE
+        timerState = start
     }
 }

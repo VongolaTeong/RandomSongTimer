@@ -140,11 +140,11 @@
                 android:text="@string/start"
                 style="?android:attr/buttonBarButtonStyle" />
             <Button
-                android:id="@+id/button_stop_timer"
+                android:id="@+id/button_pause_timer"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:text="@string/stop"
+                android:text="@string/pause"
                 style="?android:attr/buttonBarButtonStyle" />
 
             <Button
