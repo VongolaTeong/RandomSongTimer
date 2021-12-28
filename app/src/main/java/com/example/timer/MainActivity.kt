@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         resetButton.setOnClickListener{
             val toast = Toast.makeText(this, "Timer Reset", Toast.LENGTH_SHORT)
             toast.show()
+            configInitialState()
             //TODO
         }
         settingButton.setOnClickListener{
