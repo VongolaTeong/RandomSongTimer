@@ -8,6 +8,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+    lateinit var numberPickerSeconds: NumberPicker
+    lateinit var numberPickerMinutes: NumberPicker
+    lateinit var numberPickerHours: NumberPicker
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -18,9 +22,9 @@ class MainActivity : AppCompatActivity() {
         val stopButton: Button = findViewById(R.id.button_stop_timer)
         val resetButton: Button = findViewById(R.id.button_reset_timer)
         val settingButton: ImageButton = findViewById(R.id.button_setting)
-        val numberPickerSeconds: NumberPicker = findViewById(R.id.number_picker_seconds)
-        val numberPickerMinutes: NumberPicker = findViewById(R.id.number_picker_minutes)
-        val numberPickerHours: NumberPicker = findViewById(R.id.number_picker_hours)
+        numberPickerSeconds = findViewById(R.id.number_picker_seconds)
+        numberPickerMinutes = findViewById(R.id.number_picker_minutes)
+        numberPickerHours = findViewById(R.id.number_picker_hours)
 
         //button listener
         resumeButton.setOnClickListener{
@@ -47,11 +51,11 @@ class MainActivity : AppCompatActivity() {
             //TODO
         }
 
-        setInputNumbersValues(numberPickerSeconds, numberPickerMinutes, numberPickerHours)
+        setInputNumbersValues()
 
     }
     //function to get input on time
-    private fun setInputNumbersValues(numberPickerSeconds: NumberPicker, numberPickerMinutes: NumberPicker, numberPickerHours: NumberPicker) {
+    private fun setInputNumbersValues() {
         val secondsNumbers = arrayOfNulls<String>(61)
         for (i in secondsNumbers.indices) secondsNumbers[i] = String.format("%02d", i)
 
