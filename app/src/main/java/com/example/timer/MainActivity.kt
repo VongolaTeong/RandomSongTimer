@@ -75,13 +75,14 @@ class MainActivity : AppCompatActivity() {
             else {
                 //get the interval and start the timer
                 val interval = getInterval()
+                timeLeft = interval
                 myTimer = object: CountDownTimer(interval, 1000) {
                     //to implement the pause function, check if the pause button is clicked on every tick
                     override fun onTick(millisUntilFinished: Long) {
                         timeLeft = millisUntilFinished
                         displayTimeLeft(millisUntilFinished)
-                        //if pause button is clicked, save the time left and cancel the timer
-                        if (timerState==pause){
+                        //if pause or reset button is clicked, save the time left and cancel the timer
+                        if (timerState==pause || timerState==initial){
                             myTimer.cancel()
                         }
                     }
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                         Log.i("finish", "timer finished")
                         val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
                         toast.show()
-                        configureFinishedState()
+                        configFinishedState()
                         //TODO
                     }
                 }.start()
@@ -172,6 +173,7 @@ class MainActivity : AppCompatActivity() {
         numberPickerSeconds.value = 0
         numberPickerMinutes.value = 0
         numberPickerHours.value = 0
+        timeLeft = 0
     }
 
     private fun configStartState() {
@@ -210,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                 timeLeft = millisUntilFinished
                 displayTimeLeft(millisUntilFinished)
                 //if pause button is clicked, save the time left and cancel the timer
-                if (timerState==pause){
+                if (timerState==pause || timerState==initial){
                     myTimer.cancel()
                 }
             }
@@ -219,14 +221,14 @@ class MainActivity : AppCompatActivity() {
                 Log.i("finish", "timer finished")
                 val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
                 toast.show()
-                configureFinishedState()
+                configFinishedState()
                 //TODO
             }
         }.start()
         displayTimeLeft(timeLeft)
     }
 
-    private fun configureFinishedState() {
+    private fun configFinishedState() {
         inputUI.visibility = View.VISIBLE
         timerUI.visibility = View.GONE
         startButton.visibility = View.VISIBLE
