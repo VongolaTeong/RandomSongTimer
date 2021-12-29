@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.NumberPicker
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.properties.Delegates
 
@@ -18,6 +15,9 @@ class MainActivity : AppCompatActivity() {
     private val pause: Byte = 2
     private val finished: Byte = 3
     private var timerState: Byte = initial
+
+    //input UI
+    private lateinit var inputUI: LinearLayout
 
     //number pickers
     private lateinit var numberPickerSeconds: NumberPicker
@@ -35,11 +35,18 @@ class MainActivity : AppCompatActivity() {
     //long to store time left when paused
     private var timeLeft by Delegates.notNull<Long>()
 
+    //count down timer
+    private lateinit var timerUI: LinearLayout
+    private lateinit var timer_hour: TextView
+    private lateinit var timer_minute: TextView
+    private lateinit var timer_second: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //find view by ID
+        inputUI = findViewById(R.id.timer_input)
         resumeButton = findViewById(R.id.button_resume_timer)
         startButton = findViewById(R.id.button_start_timer)
         pauseButton = findViewById(R.id.button_pause_timer)
@@ -48,6 +55,10 @@ class MainActivity : AppCompatActivity() {
         numberPickerSeconds = findViewById(R.id.number_picker_seconds)
         numberPickerMinutes = findViewById(R.id.number_picker_minutes)
         numberPickerHours = findViewById(R.id.number_picker_hours)
+        timerUI = findViewById(R.id.count_down_timer)
+        timer_hour = findViewById(R.id.timer_hour)
+        timer_minute = findViewById(R.id.timer_minute)
+        timer_second = findViewById(R.id.timer_second)
 
         //button listeners
         resumeButton.setOnClickListener{
@@ -139,6 +150,8 @@ class MainActivity : AppCompatActivity() {
 
     //functions to show different UI in different states
     private fun configInitialState() {
+        inputUI.visibility = View.VISIBLE
+        timerUI.visibility = View.GONE
         startButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
         resumeButton.visibility = View.GONE
@@ -150,6 +163,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configStartState() {
+        inputUI.visibility = View.GONE
+        timerUI.visibility = View.VISIBLE
         startButton.visibility = View.GONE
         pauseButton.visibility = View.VISIBLE
         resumeButton.visibility = View.GONE
@@ -158,6 +173,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configPauseState() {
+        inputUI.visibility = View.GONE
+        timerUI.visibility = View.VISIBLE
         startButton.visibility = View.GONE
         pauseButton.visibility = View.GONE
         resumeButton.visibility = View.VISIBLE
@@ -166,6 +183,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configResumeState() {
+        inputUI.visibility = View.GONE
+        timerUI.visibility = View.VISIBLE
         startButton.visibility = View.GONE
         pauseButton.visibility = View.VISIBLE
         resumeButton.visibility = View.GONE
@@ -193,6 +212,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configureFinishedState() {
+        inputUI.visibility = View.VISIBLE
+        timerUI.visibility = View.GONE
         startButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
         resumeButton.visibility = View.GONE

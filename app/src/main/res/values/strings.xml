@@ -10,4 +10,5 @@
     <string name="reset">reset</string>
     <string name="pause">pause</string>
     <string name="settings">settings</string>
+    <string name="timer">00</string>
 </resources>
