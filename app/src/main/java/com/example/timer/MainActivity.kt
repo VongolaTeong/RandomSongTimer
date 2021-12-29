@@ -9,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
     //byte to record current state of the app
@@ -31,6 +32,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resetButton: Button
     private lateinit var settingButton: ImageButton
 
+    //long to store time left when paused
+    private var timeLeft by Delegates.notNull<Long>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         resumeButton.setOnClickListener{
             val toast = Toast.makeText(this, "Timer resumed", Toast.LENGTH_SHORT)
             toast.show()
-            configStartState()
+            configResumeState()
             //TODO
         }
         startButton.setOnClickListener{
@@ -64,7 +68,11 @@ class MainActivity : AppCompatActivity() {
                 myTimer = object: CountDownTimer(interval, 1000) {
                     //to implement the pause function, check if the pause button is clicked on every tick
                     override fun onTick(millisUntilFinished: Long) {
-                        //TODO
+                        //if pause button is clicked, save the time left and cancel the timer
+                        if (timerState==pause){
+                            timeLeft = millisUntilFinished
+                            myTimer.cancel()
+                        }
                     }
 
                     override fun onFinish() {
@@ -156,6 +164,34 @@ class MainActivity : AppCompatActivity() {
         resetButton.visibility = View.VISIBLE
         timerState = pause
     }
+
+    private fun configResumeState() {
+        startButton.visibility = View.GONE
+        pauseButton.visibility = View.VISIBLE
+        resumeButton.visibility = View.GONE
+        resetButton.visibility = View.VISIBLE
+        timerState = start
+
+        myTimer = object: CountDownTimer(timeLeft, 1000) {
+            //to implement the pause function, check if the pause button is clicked on every tick
+            override fun onTick(millisUntilFinished: Long) {
+                //if pause button is clicked, save the time left and cancel the timer
+                if (timerState==pause){
+                    timeLeft = millisUntilFinished
+                    myTimer.cancel()
+                }
+            }
+
+            override fun onFinish() {
+                Log.i("finish", "timer finished")
+                val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
+                toast.show()
+                configureFinishedState()
+                //TODO
+            }
+        }.start()
+    }
+
     private fun configureFinishedState() {
         startButton.visibility = View.VISIBLE
         pauseButton.visibility = View.GONE
