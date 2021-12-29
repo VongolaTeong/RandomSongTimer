@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
     //byte to record current state of the app
@@ -33,13 +32,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var settingButton: ImageButton
 
     //long to store time left when paused
-    private var timeLeft by Delegates.notNull<Long>()
+    private var timeLeft:Long = 0
 
     //count down timer
     private lateinit var timerUI: LinearLayout
-    private lateinit var timer_hour: TextView
-    private lateinit var timer_minute: TextView
-    private lateinit var timer_second: TextView
+    private lateinit var timerHour: TextView
+    private lateinit var timerMinute: TextView
+    private lateinit var timerSecond: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +55,9 @@ class MainActivity : AppCompatActivity() {
         numberPickerMinutes = findViewById(R.id.number_picker_minutes)
         numberPickerHours = findViewById(R.id.number_picker_hours)
         timerUI = findViewById(R.id.count_down_timer)
-        timer_hour = findViewById(R.id.timer_hour)
-        timer_minute = findViewById(R.id.timer_minute)
-        timer_second = findViewById(R.id.timer_second)
+        timerHour = findViewById(R.id.timer_hour)
+        timerMinute = findViewById(R.id.timer_minute)
+        timerSecond = findViewById(R.id.timer_second)
 
         //button listeners
         resumeButton.setOnClickListener{
@@ -79,9 +78,10 @@ class MainActivity : AppCompatActivity() {
                 myTimer = object: CountDownTimer(interval, 1000) {
                     //to implement the pause function, check if the pause button is clicked on every tick
                     override fun onTick(millisUntilFinished: Long) {
+                        timeLeft = millisUntilFinished
+                        displayTimeLeft(millisUntilFinished)
                         //if pause button is clicked, save the time left and cancel the timer
                         if (timerState==pause){
-                            timeLeft = millisUntilFinished
                             myTimer.cancel()
                         }
                     }
@@ -148,6 +148,18 @@ class MainActivity : AppCompatActivity() {
         return interval
     }
 
+    //function to display remaining time
+    private fun displayTimeLeft(timeLeft: Long) {
+        var seconds = timeLeft / 1000
+        var minutes = seconds / 60
+        val hours = minutes / 60
+        seconds %= 60
+        minutes %= 60
+        timerHour.text = String.format("%02d", hours)
+        timerMinute.text = String.format("%02d", minutes)
+        timerSecond.text = String.format("%02d", seconds)
+    }
+
     //functions to show different UI in different states
     private fun configInitialState() {
         inputUI.visibility = View.VISIBLE
@@ -180,6 +192,7 @@ class MainActivity : AppCompatActivity() {
         resumeButton.visibility = View.VISIBLE
         resetButton.visibility = View.VISIBLE
         timerState = pause
+        displayTimeLeft(timeLeft)
     }
 
     private fun configResumeState() {
@@ -194,9 +207,10 @@ class MainActivity : AppCompatActivity() {
         myTimer = object: CountDownTimer(timeLeft, 1000) {
             //to implement the pause function, check if the pause button is clicked on every tick
             override fun onTick(millisUntilFinished: Long) {
+                timeLeft = millisUntilFinished
+                displayTimeLeft(millisUntilFinished)
                 //if pause button is clicked, save the time left and cancel the timer
                 if (timerState==pause){
-                    timeLeft = millisUntilFinished
                     myTimer.cancel()
                 }
             }
@@ -209,6 +223,7 @@ class MainActivity : AppCompatActivity() {
                 //TODO
             }
         }.start()
+        displayTimeLeft(timeLeft)
     }
 
     private fun configureFinishedState() {
