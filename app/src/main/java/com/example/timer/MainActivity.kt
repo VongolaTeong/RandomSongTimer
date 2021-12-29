@@ -11,18 +11,20 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
+    //byte to record current state of the app
     private val initial: Byte = 0
     private val start: Byte = 1
     private val pause: Byte = 2
     private val finished: Byte = 3
-
     private var timerState: Byte = initial
 
+    //number pickers
     private lateinit var numberPickerSeconds: NumberPicker
     private lateinit var numberPickerMinutes: NumberPicker
     private lateinit var numberPickerHours: NumberPicker
     private lateinit var myTimer: CountDownTimer
 
+    //buttons
     private lateinit var resumeButton: Button
     private lateinit var startButton: Button
     private lateinit var pauseButton: Button
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         numberPickerMinutes = findViewById(R.id.number_picker_minutes)
         numberPickerHours = findViewById(R.id.number_picker_hours)
 
-        //button listener
+        //button listeners
         resumeButton.setOnClickListener{
             val toast = Toast.makeText(this, "Timer resumed", Toast.LENGTH_SHORT)
             toast.show()
@@ -57,8 +59,10 @@ class MainActivity : AppCompatActivity() {
                 toast.show()
             }
             else {
+                //get the interval and start the timer
                 val interval = getInterval()
                 myTimer = object: CountDownTimer(interval, 1000) {
+                    //to implement the pause function, check if the pause button is clicked on every tick
                     override fun onTick(millisUntilFinished: Long) {
                         //TODO
                     }
