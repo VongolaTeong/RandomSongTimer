@@ -1,11 +1,35 @@
 package com.example.timer
 
+import android.app.AlarmManager
+import android.app.AlarmManager.RTC_WAKEUP
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+
+
+
+
+//receiver to receive alarms
+class AlarmReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent) {
+        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
+            //when rebooted, reset all alarms
+            //TODO
+        } else {
+            //send alarm notification
+            //TODO
+            Log.i("alarm", "alarm sent")
+        }
+    }
+}
 
 class MainActivity : AppCompatActivity() {
     //byte to record current state of the app
@@ -98,6 +122,26 @@ class MainActivity : AppCompatActivity() {
                 val toast = Toast.makeText(this, "Timer started", Toast.LENGTH_SHORT)
                 toast.show()
                 configStartState()
+
+                //setup the alarm
+                //alarm manager and intent
+                val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
+                val intent = Intent(this, AlarmReceiver::class.java)
+                intent.putExtra("com.android.timer.showAlarm",0)
+
+                val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    PendingIntent.getBroadcast(
+                        this, 0,
+                        intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+                } else {
+                    PendingIntent.getBroadcast(this, 0,
+                        intent, PendingIntent.FLAG_UPDATE_CURRENT)
+                }
+
+                //set the alarm
+                alarmManager.setExact(RTC_WAKEUP, interval, pendingIntent)
             }
 
             //TODO
