@@ -49,7 +49,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private fun createNotification(context: Context) {
         // Create an explicit intent for an Activity in your app
-        val intent = Intent(context, AlarmReceiver::class.java).apply {
+        val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
