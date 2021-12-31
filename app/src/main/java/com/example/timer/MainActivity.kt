@@ -1,7 +1,6 @@
 package com.example.timer
 
 import android.app.AlarmManager
-import android.app.AlarmManager.RTC_WAKEUP
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -88,6 +87,7 @@ class MainActivity : AppCompatActivity() {
             val toast = Toast.makeText(this, "Timer resumed", Toast.LENGTH_SHORT)
             toast.show()
             configResumeState()
+            scheduleAlarm(timeLeft)
             //TODO
         }
         startButton.setOnClickListener{
@@ -124,24 +124,7 @@ class MainActivity : AppCompatActivity() {
                 configStartState()
 
                 //setup the alarm
-                //alarm manager and intent
-                val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
-
-                val intent = Intent(this, AlarmReceiver::class.java)
-                intent.putExtra("com.android.timer.showAlarm",0)
-
-                val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    PendingIntent.getBroadcast(
-                        this, 0,
-                        intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-                    )
-                } else {
-                    PendingIntent.getBroadcast(this, 0,
-                        intent, PendingIntent.FLAG_UPDATE_CURRENT)
-                }
-
-                //set the alarm
-                alarmManager.setExact(RTC_WAKEUP, interval, pendingIntent)
+                scheduleAlarm(interval)
             }
 
             //TODO
@@ -150,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             val toast = Toast.makeText(this, "Timer Paused", Toast.LENGTH_SHORT)
             toast.show()
             configPauseState()
+            cancelAlarm()
             //TODO
         }
         resetButton.setOnClickListener{
@@ -283,6 +267,27 @@ class MainActivity : AppCompatActivity() {
         timerState = finished
     }
 
+    //function to schedule alarm
+    private fun scheduleAlarm(interval: Long) {
+        //alarm manager and intent
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra("com.android.timer.showAlarm",0)
+
+        val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(
+                this, 0,
+                intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            PendingIntent.getBroadcast(this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        //set the alarm
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, interval, pendingIntent)
+    }
     //function to cancel scheduled alarm
     private fun cancelAlarm() {
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
