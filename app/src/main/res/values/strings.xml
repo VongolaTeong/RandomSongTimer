@@ -11,4 +11,7 @@
     <string name="pause">pause</string>
     <string name="settings">settings</string>
     <string name="timer">00</string>
+    <string name="channel_name">Timer Notification</string>
+    <string name="channel_description">Notification Channel for Timer app</string>
+    <string name="alarm">Alarm!</string>
 </resources>
