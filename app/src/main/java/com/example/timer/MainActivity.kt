@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity() {
             val toast = Toast.makeText(this, "Timer Reset", Toast.LENGTH_SHORT)
             toast.show()
             configInitialState()
+            cancelAlarm()
             //TODO
         }
         settingButton.setOnClickListener{
@@ -280,5 +281,26 @@ class MainActivity : AppCompatActivity() {
         resumeButton.visibility = View.GONE
         resetButton.visibility = View.GONE
         timerState = finished
+    }
+
+    //function to cancel scheduled alarm
+    private fun cancelAlarm() {
+        val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
+
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra("com.android.timer.showAlarm",0)
+
+        val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PendingIntent.getBroadcast(
+                this, 0,
+                intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        } else {
+            PendingIntent.getBroadcast(this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        //set the alarm
+        alarmManager.cancel(pendingIntent)
     }
 }
