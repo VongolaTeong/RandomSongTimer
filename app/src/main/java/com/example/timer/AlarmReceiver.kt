@@ -19,15 +19,23 @@ class AlarmReceiver : BroadcastReceiver() {
     private val channelID = "1000"
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (Intent.ACTION_BOOT_COMPLETED == intent.action) {
-            //when rebooted, reset all alarms
-            //TODO
-        } else {
-            //send alarm notification
-            //TODO
-            Log.i("alarm", "alarm sent")
-            createChannel(context)
-            createNotification(context)
+        when {
+            Intent.ACTION_BOOT_COMPLETED == intent.action -> {
+                //when rebooted, reset all alarms
+                //TODO
+            }
+            Intent.ACTION_DELETE == intent.action -> {
+                Log.i("dismiss", "dismiss the notification")
+                val notificationManager:NotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(notificationID)
+            }
+            else -> {
+                //send alarm notification
+                //TODO
+                Log.i("alarm", "alarm sent")
+                createChannel(context)
+                createNotification(context)
+            }
         }
     }
 
@@ -42,17 +50,37 @@ class AlarmReceiver : BroadcastReceiver() {
 
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            val notificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager:NotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
         }
     }
 
     private fun createNotification(context: Context) {
-        // Create an explicit intent for an Activity in your app
+        //intent to open app
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+
+        //intent to dismiss alarm
+        val dismissIntent = Intent(context, AlarmReceiver::class.java).apply {
+            action = Intent.ACTION_DELETE
+            //TODO
+            //cancel the music
+        }
+        val dismissPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(context, 1, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+        //intent to reset alarm
+        val resetIntent = Intent(context, MainActivity::class.java).apply {
+            //action = ACTION_SNOOZE
+            //putExtra(EXTRA_NOTIFICATION_ID, 0)
+            //TODO
+            //cancel the music and reset the alarm
+            //add a reset button
+        }
+        val resetPendingIntent: PendingIntent =
+            PendingIntent.getBroadcast(context, 2, resetIntent, 0)
 
         val builder = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.ic_alarm_add)
@@ -60,6 +88,8 @@ class AlarmReceiver : BroadcastReceiver() {
             .setContentText(context.getString(R.string.alarm))
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
+            .addAction(R.drawable.ic_alarm_add, context.getString(R.string.dismiss),
+                dismissPendingIntent)
 
         with(NotificationManagerCompat.from(context)) {
             notify(notificationID, builder.build())
