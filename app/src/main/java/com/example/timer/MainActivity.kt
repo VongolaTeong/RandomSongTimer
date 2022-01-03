@@ -44,6 +44,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timerMinute: TextView
     private lateinit var timerSecond: TextView
 
+    //save the input time for reset
+    private var inputTime:Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -68,6 +71,7 @@ class MainActivity : AppCompatActivity() {
             val toast = Toast.makeText(this, "Timer resumed", Toast.LENGTH_SHORT)
             toast.show()
             configResumeState()
+            startAlarm(timeLeft)
             scheduleAlarm(timeLeft)
             //TODO
         }
@@ -80,26 +84,10 @@ class MainActivity : AppCompatActivity() {
             else {
                 //get the interval and start the timer
                 val interval = getInterval()
+                inputTime = interval
                 timeLeft = interval
-                myTimer = object: CountDownTimer(interval, 1000) {
-                    //to implement the pause function, check if the pause button is clicked on every tick
-                    override fun onTick(millisUntilFinished: Long) {
-                        timeLeft = millisUntilFinished
-                        displayTimeLeft(millisUntilFinished)
-                        //if pause or reset button is clicked, save the time left and cancel the timer
-                        if (timerState==pause || timerState==initial){
-                            myTimer.cancel()
-                        }
-                    }
+                startAlarm(interval)
 
-                    override fun onFinish() {
-                        Log.i("finish", "timer finished")
-                        val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
-                        toast.show()
-                        configFinishedState()
-                        //TODO
-                    }
-                }.start()
                 val toast = Toast.makeText(this, "Timer started", Toast.LENGTH_SHORT)
                 toast.show()
                 configStartState()
@@ -216,12 +204,27 @@ class MainActivity : AppCompatActivity() {
         resetButton.visibility = View.VISIBLE
         timerState = start
 
-        myTimer = object: CountDownTimer(timeLeft, 1000) {
+        startAlarm(timeLeft)
+        displayTimeLeft(timeLeft)
+    }
+
+    private fun configFinishedState() {
+        inputUI.visibility = View.VISIBLE
+        timerUI.visibility = View.GONE
+        startButton.visibility = View.VISIBLE
+        pauseButton.visibility = View.GONE
+        resumeButton.visibility = View.GONE
+        resetButton.visibility = View.GONE
+        timerState = finished
+    }
+
+    private fun startAlarm(interval: Long){
+        myTimer = object: CountDownTimer(interval, 1000) {
             //to implement the pause function, check if the pause button is clicked on every tick
             override fun onTick(millisUntilFinished: Long) {
                 timeLeft = millisUntilFinished
                 displayTimeLeft(millisUntilFinished)
-                //if pause button is clicked, save the time left and cancel the timer
+                //if pause or reset button is clicked, save the time left and cancel the timer
                 if (timerState==pause || timerState==initial){
                     myTimer.cancel()
                 }
@@ -235,17 +238,6 @@ class MainActivity : AppCompatActivity() {
                 //TODO
             }
         }.start()
-        displayTimeLeft(timeLeft)
-    }
-
-    private fun configFinishedState() {
-        inputUI.visibility = View.VISIBLE
-        timerUI.visibility = View.GONE
-        startButton.visibility = View.VISIBLE
-        pauseButton.visibility = View.GONE
-        resumeButton.visibility = View.GONE
-        resetButton.visibility = View.GONE
-        timerState = finished
     }
 
     //function to schedule alarm

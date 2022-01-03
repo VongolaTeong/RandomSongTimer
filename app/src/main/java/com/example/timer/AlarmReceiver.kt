@@ -12,7 +12,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
-
 //receiver to receive alarms
 class AlarmReceiver : BroadcastReceiver() {
     private val notificationID = 100
@@ -70,17 +69,6 @@ class AlarmReceiver : BroadcastReceiver() {
         }
         val dismissPendingIntent: PendingIntent =
             PendingIntent.getBroadcast(context, 1, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        //intent to reset alarm
-        val resetIntent = Intent(context, MainActivity::class.java).apply {
-            //action = ACTION_SNOOZE
-            //putExtra(EXTRA_NOTIFICATION_ID, 0)
-            //TODO
-            //cancel the music and reset the alarm
-            //add a reset button
-        }
-        val resetPendingIntent: PendingIntent =
-            PendingIntent.getBroadcast(context, 2, resetIntent, 0)
 
         val builder = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.ic_alarm_add)
