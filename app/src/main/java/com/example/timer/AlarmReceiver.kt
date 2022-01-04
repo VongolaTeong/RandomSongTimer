@@ -7,10 +7,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+
 
 //receiver to receive alarms
 class AlarmReceiver : BroadcastReceiver() {
@@ -34,6 +37,8 @@ class AlarmReceiver : BroadcastReceiver() {
                 Log.i("alarm", "alarm sent")
                 createChannel(context)
                 createNotification(context)
+                //play song
+
             }
         }
     }
@@ -70,6 +75,11 @@ class AlarmReceiver : BroadcastReceiver() {
         val dismissPendingIntent: PendingIntent =
             PendingIntent.getBroadcast(context, 1, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
+        //set song
+        val alarmSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+        //TODO: pick song from folder
+
         val builder = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.ic_alarm_add)
             .setContentTitle(context.getString(R.string.channel_name))
@@ -78,7 +88,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .addAction(R.drawable.ic_alarm_add, context.getString(R.string.dismiss),
                 dismissPendingIntent)
-
+            .setSound(alarmSound)
         with(NotificationManagerCompat.from(context)) {
             notify(notificationID, builder.build())
         }

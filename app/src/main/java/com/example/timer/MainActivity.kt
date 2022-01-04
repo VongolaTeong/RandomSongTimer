@@ -114,6 +114,8 @@ class MainActivity : AppCompatActivity() {
         }
         settingButton.setOnClickListener{
             //TODO
+            val intent = Intent(this, SettingActivity::class.java)
+            startActivity(intent)
         }
 
         setInputNumbersValues()
