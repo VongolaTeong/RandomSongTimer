@@ -8,5 +8,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.i("preferences", "preferences reached")
         setPreferencesFromResource(R.xml.preferences, rootKey)
+
+        //val prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
     }
 }
