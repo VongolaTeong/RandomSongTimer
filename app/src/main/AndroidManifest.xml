@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.timer">
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +28,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:exported="true"
             android:name=".SettingActivity"
             android:label="Settings"
             android:parentActivityName=".MainActivity">

@@ -1,5 +1,4 @@
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         app:key="timer_category"
         app:title="Timer">
@@ -10,8 +9,8 @@
 
         <Preference
             app:key="file"
-            app:title="Pick the music"
-            />
+            app:title="Pick the music" />
+
     </PreferenceCategory>
 
 

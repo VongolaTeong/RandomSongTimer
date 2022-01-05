@@ -1,5 +1,6 @@
 package com.example.timer
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -23,13 +24,8 @@ class SettingActivity : AppCompatActivity() {
                 if (key == "sound") {
                     Log.i("sound preference","Sound preference value was updated to: " + sharedPreferences.getBoolean("sound", true))
                 }
-
-                else if (key == "file") {
-                    //val intent: Intent =
-                }
             }
 
         prefs.registerOnSharedPreferenceChangeListener(listener)
-    }
-
+        }
 }
