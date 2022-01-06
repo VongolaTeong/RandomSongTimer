@@ -1,6 +1,5 @@
 package com.example.timer
 
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -17,7 +16,7 @@ class SettingActivity : AppCompatActivity() {
             .replace(R.id.settings, SettingsFragment())
             .commit()
 
-        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 
         val listener: SharedPreferences.OnSharedPreferenceChangeListener =
             SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
