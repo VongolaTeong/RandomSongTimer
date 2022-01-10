@@ -1,8 +1,10 @@
 package com.example.timer
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -10,6 +12,8 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
     //byte to record current state of the app
@@ -49,6 +53,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //check run time permission
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED){
+            Log.i("read permission", "read permission granted")
+        }
+
+        else {
+            val isGranted = ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 111)
+            if (isGranted.equals(false)){
+                //no permission granted
+                val toast = Toast.makeText(this, "No permission granted!", Toast.LENGTH_SHORT)
+                toast.show()
+            }
+        }
+
         setContentView(R.layout.activity_main)
 
         //find view by ID
@@ -253,7 +274,7 @@ class MainActivity : AppCompatActivity() {
         val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
                 this, 0,
-                intent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                intent, PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         } else {
             PendingIntent.getBroadcast(this, 0,
