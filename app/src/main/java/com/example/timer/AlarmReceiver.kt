@@ -8,9 +8,7 @@ import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.content.SharedPreferences
-import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -25,19 +23,15 @@ import java.io.*
 class AlarmReceiver : BroadcastReceiver() {
     private val notificationID = 100
     private val channelID = "1000"
-    private lateinit var mediaPlayer: MediaPlayer
+    private val mediaPlayer = MediaPlayer()
+
     override fun onReceive(context: Context, intent: Intent) {
-        when {
-            Intent.ACTION_BOOT_COMPLETED == intent.action -> {
-                //when rebooted, reset all alarms
-                //TODO
-            }
-            Intent.ACTION_DELETE == intent.action -> {
-                Log.i("dismiss", "dismiss the notification")
-                val notificationManager:NotificationManager = context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.cancel(notificationID)
-            }
-            else -> {
+        val action = intent.extras?.getInt("action")
+        Log.i("action", action.toString())
+
+        when (action) {
+
+            101 -> {
                 //send alarm notification
                 Log.i("alarm", "alarm sent")
                 createChannel(context)
@@ -51,27 +45,20 @@ class AlarmReceiver : BroadcastReceiver() {
                 //TODO("stop song if dismissed")
                 val file = fileFromContentUri(context, uri)
                 Log.i("file path", file.absolutePath)
-                mediaPlayer = MediaPlayer()
-                mediaPlayer.apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-                    )
-                }
-                try {
-                    //mediaPlayer.setDataSource(context, Uri.parse(stringPath))
-                    mediaPlayer.setDataSource(file.absolutePath)
-                    mediaPlayer.setOnPreparedListener { mp -> mp.start() }
-                    mediaPlayer.prepareAsync()
-                }
-                catch (e:Exception){
-                    e.printStackTrace()
-                }
+
+                MusicControl.getInstance(context)?.playMusic(file.absolutePath)
+            }
+            else -> {
+                Log.i("media player state", mediaPlayer.toString())
+                //TODO: the media player never stops, possibly referencing to different instances
+                MusicControl.getInstance(context)?.stopMusic()
+                val notificationManager: NotificationManager =
+                    context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.cancel(notificationID)
+                Log.i("dismiss", "dismiss the notification")
             }
         }
-    }
+        }
 
     //create notification channel
     private fun createChannel(context: Context) {
@@ -94,31 +81,23 @@ class AlarmReceiver : BroadcastReceiver() {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 3, intent, 0)
 
         //intent to dismiss alarm
-        val dismissIntent = Intent(context, AlarmReceiver::class.java).apply {
-            action = Intent.ACTION_DELETE
-            //TODO
-            //cancel the music
-        }
+        val dismissIntent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra("dismiss","dismiss")
+
         val dismissPendingIntent: PendingIntent =
             PendingIntent.getBroadcast(context, 1, dismissIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-
-        //set song
-        val alarmSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-        //TODO: pick song from folder
 
         val builder = NotificationCompat.Builder(context, channelID)
             .setSmallIcon(R.drawable.ic_alarm_add)
             .setContentTitle(context.getString(R.string.channel_name))
             .setContentText(context.getString(R.string.alarm))
             .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
             .addAction(R.drawable.ic_alarm_add, context.getString(R.string.dismiss),
                 dismissPendingIntent)
-            .setSound(alarmSound)
+            .setAutoCancel(true)
         with(NotificationManagerCompat.from(context)) {
             notify(notificationID, builder.build())
         }
@@ -163,3 +142,5 @@ class AlarmReceiver : BroadcastReceiver() {
         }
     }
 }
+
+

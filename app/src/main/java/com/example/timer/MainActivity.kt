@@ -14,6 +14,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     //byte to record current state of the app
@@ -258,18 +259,18 @@ class MainActivity : AppCompatActivity() {
                 val toast = Toast.makeText(this@MainActivity, "timer finished", Toast.LENGTH_SHORT)
                 toast.show()
                 configFinishedState()
-                //TODO
             }
         }.start()
     }
 
     //function to schedule alarm
     private fun scheduleAlarm(interval: Long) {
+        Log.i("call schedule alarm", "called")
         //alarm manager and intent
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("com.android.timer.showAlarm",0)
+        intent.putExtra("action",101)
 
         val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
@@ -282,14 +283,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         //set the alarm
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, interval, pendingIntent)
+        Log.i("interval in schedule", interval.toString())
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis + interval, pendingIntent)
     }
     //function to cancel scheduled alarm
     private fun cancelAlarm() {
         val alarmManager = getSystemService(ALARM_SERVICE) as AlarmManager
 
         val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("com.android.timer.showAlarm",0)
+        intent.putExtra("action",102)
 
         val pendingIntent:PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PendingIntent.getBroadcast(
