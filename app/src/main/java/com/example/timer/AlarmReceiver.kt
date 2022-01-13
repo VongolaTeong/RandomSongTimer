@@ -45,11 +45,16 @@ class AlarmReceiver : BroadcastReceiver() {
                 val file = fileFromContentUri(context, uri)
                 Log.i("file path", file.absolutePath)
 
-                MusicControl.getInstance(context)?.playMusic(file.absolutePath)
+                if (prefs.getBoolean("sound", false)) {
+                    MusicControl.getInstance(context)?.playMusic(file.absolutePath)
+                }
             }
             else -> {
                 Log.i("media player state", mediaPlayer.toString())
-                MusicControl.getInstance(context)?.stopMusic()
+                val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+                if (prefs.getBoolean("sound", false)) {
+                    MusicControl.getInstance(context)?.stopMusic()
+                }
                 val notificationManager: NotificationManager =
                     context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.cancel(notificationID)
