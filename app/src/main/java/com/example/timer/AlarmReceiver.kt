@@ -42,7 +42,6 @@ class AlarmReceiver : BroadcastReceiver() {
                 val uri:Uri = Uri.parse(stringPath)
 
                 //read file and play it in media player
-                //TODO("stop song if dismissed")
                 val file = fileFromContentUri(context, uri)
                 Log.i("file path", file.absolutePath)
 
@@ -50,7 +49,6 @@ class AlarmReceiver : BroadcastReceiver() {
             }
             else -> {
                 Log.i("media player state", mediaPlayer.toString())
-                //TODO: the media player never stops, possibly referencing to different instances
                 MusicControl.getInstance(context)?.stopMusic()
                 val notificationManager: NotificationManager =
                     context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager

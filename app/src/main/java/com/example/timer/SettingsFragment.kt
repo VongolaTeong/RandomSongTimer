@@ -6,9 +6,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.DialogFragment
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import nl.invissvenska.numberpickerpreference.NumberDialogPreference
+import nl.invissvenska.numberpickerpreference.NumberPickerPreferenceDialogFragment
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private val getMusic = registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
@@ -37,5 +40,28 @@ class SettingsFragment : PreferenceFragmentCompat() {
             getMusic.launch(arrayOf("audio/mpeg"))
         }
         return super.onPreferenceTreeClick(preference)
+    }
+
+    private val DIALOG_FRAGMENT_TAG = "CustomPreferenceDialog"
+
+    // some other code
+
+    // some other code
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference is NumberDialogPreference) {
+            val dialogPreference: NumberDialogPreference = preference as NumberDialogPreference
+            val dialogFragment: DialogFragment = NumberPickerPreferenceDialogFragment
+                .newInstance(
+                    dialogPreference.key,
+                    dialogPreference.minValue,
+                    dialogPreference.maxValue,
+                    dialogPreference.stepValue,
+                    dialogPreference.unitText
+                )
+            dialogFragment.setTargetFragment(this, 0)
+            dialogFragment.show(parentFragmentManager, DIALOG_FRAGMENT_TAG)
+        } else {
+            super.onDisplayPreferenceDialog(preference)
+        }
     }
 }

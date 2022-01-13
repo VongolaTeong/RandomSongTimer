@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -151,11 +153,11 @@ class MainActivity : AppCompatActivity() {
         val hoursNumbers = arrayOfNulls<String>(100)
         for (i in hoursNumbers.indices) hoursNumbers[i] = String.format("%02d", i)
 
-        numberPickerSeconds.maxValue = 60
+        numberPickerSeconds.maxValue = 59
         numberPickerSeconds.minValue = 0
         numberPickerSeconds.displayedValues = secondsNumbers
 
-        numberPickerMinutes.maxValue = 60
+        numberPickerMinutes.maxValue = 59
         numberPickerMinutes.minValue = 0
         numberPickerMinutes.displayedValues = secondsNumbers
 
@@ -192,9 +194,11 @@ class MainActivity : AppCompatActivity() {
         resumeButton.visibility = View.GONE
         resetButton.visibility = View.GONE
         timerState = initial
-        numberPickerSeconds.value = 0
-        numberPickerMinutes.value = 0
-        numberPickerHours.value = 0
+        //set number pickers to default value
+        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        numberPickerSeconds.value = prefs.getInt("second", 0)
+        numberPickerMinutes.value = prefs.getInt("minute", 0)
+        numberPickerHours.value = prefs.getInt("hour", 0)
         timeLeft = 0
     }
 
