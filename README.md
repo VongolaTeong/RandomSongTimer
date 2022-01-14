@@ -15,17 +15,17 @@ play random songs but didn't find it so I wrote one myself.
 
 <!-- HOW TO USE -->
 ## How to Use
-<img src="images/MainActivity.jpg" width="200" height="400">
+<img src="images/MainActivity.jpg" width="300" height="600">
 
 1) Choose the desired interval using the number pickers
 
 2) Press start to start the timer
 
-<img src="images/StartTimer.jpg" width="200" height="400">
+<img src="images/StartTimer.jpg" width="300" height="600">
 
 3) The timer would notify you when the count down ends
 
-<img src="images/SettingActivity.jpg" width="200" height="400">
+<img src="images/SettingActivity.jpg" width="300" height="600">
 
 4) You can change the settings by clicking on the settings button
 5) By toggling the "Enable Sound" button, you can enable or disable the sound
@@ -35,6 +35,7 @@ of the notifications
 or disable playing random songs from the chosen folder
 8) Click "Pick the Music Folder" to choose a directory, the app will randomly
 choose a song within the folder to play when it notifies you
+9) Set your default timer by setting the Hour, Minute and Second
 
 <!-- TODO -->
 ## TODO
