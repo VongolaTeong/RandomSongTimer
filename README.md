@@ -15,13 +15,18 @@ play random songs but didn't find it so I wrote one myself.
 
 <!-- HOW TO USE -->
 ## How to Use
-![Main page](images/MainActivity.jpg)
+<img src="images/MainActivity.jpg" width="200" height="400">
+
 1) Choose the desired interval using the number pickers
 
 2) Press start to start the timer
-![](images/StartTimer.jpg)
+
+<img src="images/StartTimer.jpg" width="200" height="400">
+
 3) The timer would notify you when the count down ends
-![](images/SettingActivity.jpg)
+
+<img src="images/SettingActivity.jpg" width="200" height="400">
+
 4) You can change the settings by clicking on the settings button
 5) By toggling the "Enable Sound" button, you can enable or disable the sound
 of the notifications
