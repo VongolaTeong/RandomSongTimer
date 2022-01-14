@@ -11,6 +11,14 @@
             app:key="file"
             app:title="Pick the music" />
 
+        <SwitchPreferenceCompat
+            app:key="random"
+            app:title="Enable Random Songs"/>
+
+        <Preference
+            app:key="folder"
+            app:title="Pick the music folder" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

@@ -15,6 +15,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.preference.PreferenceManager
 import java.io.*
 
@@ -38,16 +39,39 @@ class AlarmReceiver : BroadcastReceiver() {
                 createNotification(context)
 
                 val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
-                val stringPath = prefs.getString("file", "")
-                val uri:Uri = Uri.parse(stringPath)
 
-                //read file and play it in media player
-                val file = fileFromContentUri(context, uri)
-                Log.i("file path", file.absolutePath)
+                //if toggled, play random song from selected folder, else play selected song
+                if (prefs.getBoolean("random", true)) {
+                    val directoryPath = prefs.getString("folder", "")
+                    Log.i("directory path", directoryPath.toString())
+                    val uri = Uri.parse(directoryPath)
+                    Log.i("uri", uri.toString())
+                    val documentFile = DocumentFile.fromTreeUri(context, uri)
+                    if (documentFile != null) {
+                        val finalFile = listFiles(documentFile)
 
-                if (prefs.getBoolean("sound", false)) {
-                    MusicControl.getInstance(context)?.playMusic(file.absolutePath)
+                        val path = fileFromContentUri(context, finalFile.uri)
+                        Log.i("random song", path.absolutePath)
+                        if (prefs.getBoolean("sound", false)) {
+                            MusicControl.getInstance(context)?.playMusic(path.absolutePath)
+                        }
+                    }
+
+
                 }
+                else {
+                    val stringPath = prefs.getString("file", "")
+                    val uri:Uri = Uri.parse(stringPath)
+
+                    //read file and play it in media player
+                    val file = fileFromContentUri(context, uri)
+                    Log.i("file path", file.absolutePath)
+
+                    if (prefs.getBoolean("sound", false)) {
+                        MusicControl.getInstance(context)?.playMusic(file.absolutePath)
+                    }
+                }
+
             }
             else -> {
                 Log.i("media player state", mediaPlayer.toString())
@@ -62,6 +86,17 @@ class AlarmReceiver : BroadcastReceiver() {
             }
         }
         }
+
+    //recursive function to list files within directories
+    private fun listFiles(documentFile: DocumentFile): DocumentFile {
+        if (documentFile.isDirectory){
+            val documentFiles = documentFile.listFiles()
+            val randomIndex = (0..(documentFiles.size)).random()
+            return listFiles(documentFiles[randomIndex])
+        }
+
+        else { return documentFile}
+    }
 
     //create notification channel
     private fun createChannel(context: Context) {

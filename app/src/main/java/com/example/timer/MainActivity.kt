@@ -97,7 +97,6 @@ class MainActivity : AppCompatActivity() {
             configResumeState()
             startAlarm(timeLeft)
             scheduleAlarm(timeLeft)
-            //TODO
         }
         startButton.setOnClickListener{
             //catch the case of no input
@@ -119,25 +118,20 @@ class MainActivity : AppCompatActivity() {
                 //setup the alarm
                 scheduleAlarm(interval)
             }
-
-            //TODO
         }
         pauseButton.setOnClickListener{
             val toast = Toast.makeText(this, "Timer Paused", Toast.LENGTH_SHORT)
             toast.show()
             configPauseState()
             cancelAlarm()
-            //TODO
         }
         resetButton.setOnClickListener{
             val toast = Toast.makeText(this, "Timer Reset", Toast.LENGTH_SHORT)
             toast.show()
             configInitialState()
             cancelAlarm()
-            //TODO
         }
         settingButton.setOnClickListener{
-            //TODO
             val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }

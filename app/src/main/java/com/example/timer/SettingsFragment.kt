@@ -18,14 +18,24 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
         with (prefs.edit()){
             if (uri != null) {
-                Log.i("content path", uri.toString())
-                Log.i("path", uri.path.toString())
                 putString("file", uri.toString())
                 commit()
                 context?.contentResolver?.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
         Log.i("music preference","music preference value was updated to: " + prefs.getString("file", ""))
+    }
+
+    private val getFolder = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri: Uri? ->
+        val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity?.applicationContext)
+        with (prefs.edit()){
+            if (uri != null) {
+                putString("folder", uri.toString())
+                commit()
+                context?.contentResolver?.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+        }
+        Log.i("folder preference","folder preference value was updated to: " + prefs.getString("folder", ""))
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -36,20 +46,20 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         //get music file picked by user
         if (preference.key == "file") {
-            //requestPermissionLauncher.launch(bool:Boolean)
             getMusic.launch(arrayOf("audio/mpeg"))
+        }
+
+        else if (preference.key == "folder") {
+            getFolder.launch(null)
         }
         return super.onPreferenceTreeClick(preference)
     }
 
     private val DIALOG_FRAGMENT_TAG = "CustomPreferenceDialog"
 
-    // some other code
-
-    // some other code
     override fun onDisplayPreferenceDialog(preference: Preference) {
         if (preference is NumberDialogPreference) {
-            val dialogPreference: NumberDialogPreference = preference as NumberDialogPreference
+            val dialogPreference: NumberDialogPreference = preference
             val dialogFragment: DialogFragment = NumberPickerPreferenceDialogFragment
                 .newInstance(
                     dialogPreference.key,
